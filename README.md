@@ -1,14 +1,14 @@
 # ECLIPSE — Monitoreo proactivo de la salud de equipos de cómputo
 
-Proyecto Final de Seminario · **Anderson Abimael Isem Cac** (7690-22-9604)
+Proyecto Final de Seminario · Anderson Abimael Isem Cac (7690-22-9604)
 
-Aplicación en producción: **https://eclipse-panelcentral.duckdns.org**
+**Aplicación en producción:** https://eclipse-panelcentral.duckdns.org
 
 ECLIPSE es un agente para Windows 11 que mide CPU, RAM y disco cada 2 segundos, calcula un puntaje de salud (0–100), alerta en un panel web y limpia Temp/Prefetch en un clic. El backend (API + PostgreSQL) corre en Kubernetes sobre Google Cloud, con HTTPS (Let's Encrypt).
 
 ## El problema
 
-La Paz Grupo Hospitalario (450 PCs) atendía la lentitud de forma reactiva: 126 tickets entre mayo y septiembre de 2026, con 383.7 min de impacto promedio por ticket, de los cuales 208.1 min eran *tiempo sin detectar la falla*.
+La Paz Grupo Hospitalario (450 PCs) atendía la lentitud de forma reactiva: 126 tickets entre mayo y septiembre de 2026, con 383.7 min de impacto promedio por ticket, de los cuales 208.1 min eran tiempo sin detectar la falla.
 
 ## Resultados (datos reales)
 
@@ -48,7 +48,7 @@ k8s/
   04-web.yaml             # Service + Deployment eclipse-web (2 réplicas)
   05-ingress.yaml         # Ingress Traefik + TLS
   06-issuer.yaml          # Issuer cert-manager (Let's Encrypt)
-  init.sql                # Esquema (se genera como ConfigMap eclipse-initdb)
+  init.sql                # Esquema (Kustomize lo convierte en el ConfigMap eclipse-initdb)
   _exportados-del-cluster/  # Copia de referencia exportada con kubectl
 scripts/pruebas-seguridad.ps1   # Batería de 8 pruebas de caja negra
 LICENSE                   # Apache-2.0
@@ -58,7 +58,7 @@ Imágenes: `andersonclay/eclipse-api:1.0.0` · `andersonclay/eclipse-web:1.0.0`
 
 ## Despliegue
 
-**Requisitos:** clúster Kubernetes con Traefik y cert-manager, `kubectl`, namespace `aisemc`, y el dominio DuckDNS apuntando a la IP del Ingress.
+Requisitos: clúster Kubernetes con Traefik y cert-manager, `kubectl`, namespace `aisemc`, y el dominio DuckDNS apuntando a la IP del Ingress.
 
 ```powershell
 # 1. Namespace (si no existe)
@@ -71,14 +71,16 @@ kubectl create secret generic eclipse-secret -n aisemc `
   --from-literal=ADMIN_PASSWORD='<password-admin>' `
   --from-literal=POSTGRES_PASSWORD='<password-postgres>'
 
-# 3. Todo lo demás
+# 3. Todo lo demás (incluye el ConfigMap eclipse-initdb, generado desde k8s/init.sql)
 kubectl apply -k k8s/
 
 # 4. Verificar
-kubectl get all,ingress,pvc,certificate -n aisemc
+kubectl get all,ingress,pvc,certificate,configmap -n aisemc
 ```
 
 El certificado tarda 1–3 minutos en quedar `READY = True`.
+
+El ConfigMap `eclipse-initdb` no se crea a mano: lo genera `kustomization.yaml` (`configMapGenerator`) a partir de `k8s/init.sql`, y PostgreSQL ejecuta ese esquema en su primer arranque con el volumen vacío.
 
 ## Verificación y resiliencia
 
@@ -97,8 +99,8 @@ Los pods usan `readinessProbe`/`livenessProbe`, corren como no-root, con `allowP
 .\scripts\pruebas-seguridad.ps1    # deja la salida en resultados-seguridad.txt
 ```
 
-Hallazgos abiertos (documentados en el informe, sección 6.3): host nip.io sin TLS, base de datos de una sola réplica sin respaldo programado, imágenes con etiqueta mutable, sin NetworkPolicy.
+Hallazgos abiertos (documentados en el informe, sección 6.3): host nip.io sin TLS, base de datos de una sola réplica sin respaldo programado, imágenes con etiqueta mutable, sin NetworkPolicy, y `AGENT_KEY` compartida entre todos los agentes (mejora futura: clave por equipo con enrolamiento).
 
 ## Licencia
 
-Apache License 2.0 — ver `LICENSE`. Componentes de terceros con sus propias licencias (PostgreSQL, Kubernetes, Traefik, cert-manager).
+Apache License 2.0 — ver [LICENSE](LICENSE). Componentes de terceros con sus propias licencias (PostgreSQL, Kubernetes, Traefik, cert-manager).
