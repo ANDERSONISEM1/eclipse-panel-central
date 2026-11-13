@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ECLIPSE — Acceso administrador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="login">
+    <section class="login-marca">
+      <div class="login-marca-contenido">
+        <h1 class="login-wordmark">ECLIPSE</h1>
+        <p class="login-tagline">Panel central de monitoreo de equipos</p>
+      </div>
+      <div class="login-lineas" aria-hidden="true"></div>
+    </section>
+
+    <section class="login-formulario-wrap">
+      <form id="formLogin" class="login-formulario" autocomplete="off">
+        <h2 class="login-titulo">Inicia sesión</h2>
+
+        <label class="campo">
+          <span class="campo-label">Usuario</span>
+<input type="text" id="loginUsuario" class="campo-input" placeholder="" required />
+        </label>
+        <label class="campo">
+          <span class="campo-label">Contraseña</span>
+          <input type="password" id="loginPassword" class="campo-input" placeholder="••••••••" required />
+        </label>
+
+        <p id="loginError" class="login-error" hidden>Usuario o contraseña incorrectos.</p>
+        <button type="submit" class="boton boton-primario boton-full">Entrar al panel</button>
+      </form>
+    </section>
+  </main>
+  <script src="auth.js"></script>
+</body>
+</html>

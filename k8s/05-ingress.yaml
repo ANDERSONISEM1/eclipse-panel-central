@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eclipse
+  namespace: aisemc
+  annotations:
+    cert-manager.io/issuer: letsencrypt-aisemc
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - eclipse-panelcentral.duckdns.org
+      secretName: eclipse-tls
+  rules:
+    - host: eclipse-panelcentral.duckdns.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eclipse-web
+                port:
+                  number: 80
+    - host: eclipse.35.188.164.62.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eclipse-web
+                port:
+                  number: 80

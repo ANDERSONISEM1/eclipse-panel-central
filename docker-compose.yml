@@ -1,0 +1,36 @@
+# ⚠️ Todos los valores de abajo son SOLO DE PRUEBA. Cámbialos antes de usar en serio.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: eclipse_monitoreo
+      POSTGRES_USER: eclipse
+      POSTGRES_PASSWORD: cambiame-db-prueba
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eclipse -d eclipse_monitoreo"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  eclipse-api:
+    build: ./EclipseApi
+    environment:
+      DB_CONNECTION: "Host=db;Port=5432;Database=eclipse_monitoreo;Username=eclipse;Password=cambiame-db-prueba;Timeout=5;Command Timeout=15"
+      AGENT_KEY: "clave-agente-prueba-cambiame"
+      ADMIN_PASSWORD: "admin-prueba-cambiame"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  eclipse-web:
+    build: ./Eclipse-web
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eclipse-api
+
+volumes:
+  db_data:

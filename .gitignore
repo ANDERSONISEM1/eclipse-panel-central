@@ -1,0 +1,16 @@
+﻿bin/
+obj/
+.vs/
+*.user
+*.suo
+Output/
+*.exe
+eclipse.config.json
+k8s/01-secret.yaml
+*.kubeconfig
+kubeconfig*
+*.pem
+*.key
+.env
+reporte.json
+Thumbs.db

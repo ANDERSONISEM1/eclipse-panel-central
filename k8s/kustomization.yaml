@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: aisemc
+
+# El Secret (eclipse-secret) se crea aparte: ver 01-secret.example.yaml
+resources:
+  - 02-postgres.yaml
+  - 03-api.yaml
+  - 04-web.yaml
+  - 06-issuer.yaml
+  - 05-ingress.yaml
+
+images:
+  - name: eclipse-api
+    newName: andersonclay/eclipse-api
+    newTag: "1.0.0"
+  - name: eclipse-web
+    newName: andersonclay/eclipse-web
+    newTag: "1.0.0"
+configMapGenerator:
+  - name: eclipse-initdb
+    files:
+      - init.sql
+generatorOptions:
+  disableNameSuffixHash: true

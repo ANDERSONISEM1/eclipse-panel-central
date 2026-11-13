@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eclipse-api
+  namespace: aisemc
+spec:
+  type: ClusterIP
+  selector:
+    app: eclipse-api
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eclipse-db
+  namespace: aisemc
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: eclipse-db
+  ports:
+    - name: pg
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eclipse-web
+  namespace: aisemc
+spec:
+  type: ClusterIP
+  selector:
+    app: eclipse-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ECLIPSE — Panel central de monitoreo</title>
+<!-- ✅ Fuentes con respaldo del sistema si Google falla -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+:root {
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", "Consolas", "Courier New", monospace;
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<noscript>
+<style>
+:root {
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Consolas", "Courier New", monospace;
+}
+</style>
+</noscript>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="dash">
+    <header class="topbar">
+      <div class="topbar-marca">
+        <span class="topbar-punto"></span>
+        <span class="topbar-wordmark">ECLIPSE</span>
+        <span class="topbar-sep">·</span>
+        <span class="topbar-sub">Panel central</span>
+      </div>
+      <div class="topbar-derecha">
+        <span id="relojEstado" class="topbar-actualizado">Actualizado hace unos segundos</span>
+        <span class="topbar-usuario" id="topbarUsuario">admin</span>
+        <button id="btnSalir" class="boton boton-fantasma">Salir</button>
+      </div>
+    </header>
+
+    <div class="dash-contenido">
+      <section class="resumen">
+        <div class="resumen-titulo-wrap">
+          <h1 class="resumen-titulo">Equipos monitoreados</h1>
+          <p class="resumen-sub">Cada equipo reporta su estado automáticamente desde el aplicativo instalado.</p>
+        </div>
+        <div class="chips" id="chips" role="tablist" aria-label="Filtrar por estado">
+          <button class="chip chip-activo" data-filtro="todos" role="tab" aria-selected="true">
+            Todos <span class="chip-num" id="numTodos">0</span>
+          </button>
+          <button class="chip chip-normal" data-filtro="normal" role="tab" aria-selected="false">
+            Normal <span class="chip-num" id="numNormal">0</span>
+          </button>
+          <button class="chip chip-advertencia" data-filtro="advertencia" role="tab" aria-selected="false">
+            Advertencia <span class="chip-num" id="numAdvertencia">0</span>
+          </button>
+          <button class="chip chip-critico" data-filtro="critico" role="tab" aria-selected="false">
+            Crítico <span class="chip-num" id="numCritico">0</span>
+          </button>
+        </div>
+      </section>
+
+      <div class="buscador">
+        <input
+          type="text"
+          id="buscarIp"
+          class="buscador-input"
+          placeholder="Buscar por dirección IP…"
+          autocomplete="off"
+        />
+      </div>
+
+      <section class="tabla-wrap">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th class="col-estado">Estado</th>
+              <th>Equipo</th>
+              <th>Dirección IP</th>
+              <th>CPU</th>
+              <th>RAM</th>
+              <th>Disco libre</th>
+              <th>Última conexión</th>
+              <th class="col-accion"></th>
+            </tr>
+          </thead>
+          <tbody id="cuerpoTabla">
+            <!-- Las filas se insertan aquí desde dashboard.js -->
+          </tbody>
+        </table>
+        <p id="tablaVacia" class="tabla-vacia" hidden>No hay equipos que coincidan con la búsqueda.</p>
+      </section>
+    </div>
+  </main>
+
+  <!-- ===================== MODAL: REPORTE DE SALUD DEL EQUIPO ===================== -->
+  <div id="modalBackdrop" class="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalHost">
+      <button id="modalCerrar" class="modal-cerrar" aria-label="Cerrar">✕</button>
+
+      <!-- Cabecera: identidad del equipo -->
+      <div class="modal-cabecera">
+        <span id="modalDot" class="modal-dot"></span>
+        <div>
+          <h2 id="modalHost" class="modal-host"></h2>
+          <p id="modalIp" class="modal-ip"></p>
+        </div>
+        <span id="modalBadge" class="badge modal-badge"></span>
+      </div>
+
+      <div id="modalCuerpo" class="modal-cuerpo">
+        <p class="modal-cargando">Cargando reporte…</p>
+      </div>
+
+      <!-- Plantilla del contenido del reporte -->
+      <template id="plantillaReporte">
+        <div>
+          <!-- Puntaje de salud -->
+          <section class="modal-seccion modal-puntaje">
+            <div class="anillo" id="anillo">
+              <div class="anillo-interior">
+                <span class="anillo-valor" id="reportePuntajeValor"></span>
+              </div>
+            </div>
+            <div>
+              <p class="modal-eyebrow">Puntaje de salud</p>
+              <p class="anillo-estado" id="reportePuntajeEstado"></p>
+            </div>
+          </section>
+
+          <!-- Procesos más pesados -->
+          <section class="modal-seccion">
+            <p class="modal-eyebrow">Procesos más pesados</p>
+            <table class="mini-tabla">
+              <thead>
+                <tr><th>Proceso</th><th>CPU</th><th>RAM</th></tr>
+              </thead>
+              <tbody id="reporteProcesos"></tbody>
+            </table>
+            <p id="reporteSinProcesos" class="modal-nota" hidden>No hay procesos con uso alto de CPU en este momento.</p>
+          </section>
+
+          <!-- Programas de inicio -->
+          <section class="modal-seccion">
+            <p class="modal-eyebrow">Programas de inicio</p>
+            <p id="reporteProgramasInicio" class="modal-texto"></p>
+          </section>
+
+          <!-- Alertas -->
+          <section class="modal-seccion modal-seccion-ultima">
+            <p class="modal-eyebrow">Alertas recientes</p>
+            <ul id="reporteAlertas" class="lista-alertas"></ul>
+            <p id="reporteSinAlertas" class="modal-nota" hidden>Sin cambios de estado registrados.</p>
+          </section>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Plantilla de una fila de la tabla principal -->
+  <template id="plantillaFila">
+    <tr class="fila">
+      <td class="col-estado"><span class="fila-dot"></span></td>
+      <td class="fila-host"></td>
+      <td class="fila-ip"></td>
+      <td>
+        <div class="metrica-mini">
+          <span class="fila-cpu metrica-mini-valor"></span>
+          <div class="metrica-mini-track">
+            <div class="fila-cpu-fill metrica-mini-fill"></div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="metrica-mini">
+          <span class="fila-ram metrica-mini-valor"></span>
+          <div class="metrica-mini-track">
+            <div class="fila-ram-fill metrica-mini-fill"></div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="metrica-mini">
+          <span class="fila-disco metrica-mini-valor"></span>
+          <div class="metrica-mini-track">
+            <div class="fila-disco-fill metrica-mini-fill"></div>
+          </div>
+        </div>
+      </td>
+      <td class="fila-visto"></td>
+      <td class="col-accion"><button class="boton boton-fantasma boton-ver">Ver</button></td>
+    </tr>
+  </template>
+
+  <!-- Plantilla de fila de proceso pesado -->
+  <template id="plantillaProceso">
+    <tr>
+      <td class="proceso-nombre"></td>
+      <td class="proceso-cpu"></td>
+      <td class="proceso-ram"></td>
+    </tr>
+  </template>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
