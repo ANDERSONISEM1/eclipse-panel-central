@@ -1,0 +1,52 @@
+﻿**********************
+Inicio de la transcripción de Windows PowerShell
+Hora de inicio: 20261113070928
+Nombre de usuario: DESKTOP-38L8N9M\PRIMER
+Usuario RunAs: DESKTOP-38L8N9M\PRIMER
+Nombre de la configuración: 
+Máquina: DESKTOP-38L8N9M (Microsoft Windows NT 10.0.26200.0)
+Aplicación host: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+Id. de proceso: 18508
+PSVersion: 5.1.26100.9818
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9818
+BuildVersion: 10.0.26100.9818
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+1) Sin token (esperado 401)
+>> ErrorTerminación(Invoke-WebRequest): "Error en el servidor remoto: (401) No autorizado."
+GET https://eclipse-panelcentral.duckdns.org/api/equipos -> 401
+2) Token falso (esperado 401)
+>> ErrorTerminación(Invoke-WebRequest): "Error en el servidor remoto: (401) No autorizado."
+GET https://eclipse-panelcentral.duckdns.org/api/equipos -> 401
+3) Reporte sin clave (esperado 401)
+>> ErrorTerminación(Invoke-WebRequest): "Error en el servidor remoto: (401) No autorizado."
+POST https://eclipse-panelcentral.duckdns.org/api/agente/reporte -> 401
+4) Reporte clave falsa (esperado 401)
+>> ErrorTerminación(Invoke-WebRequest): "Error en el servidor remoto: (401) No autorizado."
+POST https://eclipse-panelcentral.duckdns.org/api/agente/reporte -> 401
+5) Inyeccion SQL (esperado 401, no 500)
+>> ErrorTerminación(Invoke-WebRequest): "Error en el servidor remoto: (401) No autorizado."
+POST https://eclipse-panelcentral.duckdns.org/api/auth/login -> 401
+6) HTTP dominio principal (308/301 = redirige)
+GET http://eclipse-panelcentral.duckdns.org/ -> 200
+7) HTTP dominio nip.io (informativa)
+>> ErrorTerminación(Invoke-WebRequest): "404 page not found
+"
+GET http://eclipse.35.188.164.62.nip.io/ -> 404
+8) Cabeceras de seguridad presentes:
+Accept-Ranges
+Content-Length
+Cache-Control
+Content-Type
+Date
+ETag
+Last-Modified
+Server
+**********************
+Fin de la transcripción de Windows PowerShell
+Hora de finalización: 20261113070933
+**********************
