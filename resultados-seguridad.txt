@@ -1,12 +1,12 @@
 ﻿**********************
 Inicio de la transcripción de Windows PowerShell
-Hora de inicio: 20261113070928
+Hora de inicio: 20261113134153
 Nombre de usuario: DESKTOP-38L8N9M\PRIMER
 Usuario RunAs: DESKTOP-38L8N9M\PRIMER
 Nombre de la configuración: 
 Máquina: DESKTOP-38L8N9M (Microsoft Windows NT 10.0.26200.0)
 Aplicación host: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
-Id. de proceso: 18508
+Id. de proceso: 10404
 PSVersion: 5.1.26100.9818
 PSEdition: Desktop
 PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9818
@@ -48,5 +48,5 @@ Last-Modified
 Server
 **********************
 Fin de la transcripción de Windows PowerShell
-Hora de finalización: 20261113070933
+Hora de finalización: 20261113134157
 **********************

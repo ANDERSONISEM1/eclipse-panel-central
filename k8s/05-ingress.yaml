@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1
+﻿apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: eclipse
@@ -14,16 +14,6 @@ spec:
       secretName: eclipse-tls
   rules:
     - host: eclipse-panelcentral.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: eclipse-web
-                port:
-                  number: 80
-    - host: eclipse.35.188.164.62.nip.io
       http:
         paths:
           - path: /
