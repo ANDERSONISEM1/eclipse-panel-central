@@ -4,7 +4,7 @@ Proyecto Final de Seminario · Anderson Abimael Isem Cac (7690-22-9604)
 
 **Aplicación en producción:** https://eclipse-panelcentral.duckdns.org
 
-ECLIPSE es un agente para Windows 11 que mide CPU, RAM y disco cada 2 segundos, calcula un puntaje de salud (0–100), alerta en un panel web y limpia Temp/Prefetch en un clic. El backend (API + PostgreSQL) corre en Kubernetes sobre Google Cloud, con HTTPS (Let's Encrypt).
+ECLIPSE es un agente para Windows (10 y 11) que mide CPU, RAM y disco cada 2 segundos, calcula un puntaje de salud (0–100), alerta en un panel web y limpia Temp/Prefetch en un clic. El backend (API + PostgreSQL) corre en Kubernetes sobre Google Cloud, con HTTPS (Let's Encrypt). En el hospital se instaló solo en equipos con Windows 11 (ver "Resultados").
 
 ## El problema
 
@@ -20,7 +20,7 @@ La Paz Grupo Hospitalario (450 PCs) atendía la lentitud de forma reactiva: 126 
 | Puntaje de salud (tras atender) | no medido | 90.1 | ≥ 80 |
 | Tickets por día de muestreo | 1.91 | 1.25 (−34.5 %) | reducción ≥ 30 % |
 
-Muestra postest: 12 oct – 6 nov 2026, 405 equipos Windows 11 (10 tickets) vs 45 equipos Windows 10 de control (5 tickets). Limitaciones (ventana corta, grupos no aleatorios) en el informe PDF, sección 5.6.
+Muestra postest: 12 oct – 6 nov 2026, 405 equipos Windows 11 con ECLIPSE (10 tickets) vs 45 equipos Windows 10 de control sin ECLIPSE (5 tickets). Según lo indicado por el hospital, los 45 equipos con Windows 10 se reemplazarán por equipos nuevos y ya no reciben actualizaciones de seguridad, por lo que no se instaló el agente en ellos (decisión operativa, no una limitación técnica). Limitaciones (ventana corta, grupos no aleatorios) en el informe PDF, sección 5.6.
 
 ## Arquitectura
 
