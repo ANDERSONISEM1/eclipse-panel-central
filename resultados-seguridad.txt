@@ -50,3 +50,10 @@ Server
 Fin de la transcripción de Windows PowerShell
 Hora de finalización: 20261113134157
 **********************
+
+RESUMEN (agregado después de la transcripción; ver informe, secciones 6.1 y 6.3):
+Pruebas 1 a 5: conformes (401; la 5 sin error 500).
+Prueba 6: NO conforme (HTTP responde 200, sin redirección a HTTPS) -> hallazgo H-7.
+Prueba 7: 404, host nip.io retirado (H-1 corregido).
+Prueba 8: NO conforme; ninguna cabecera listada es de seguridad (faltan HSTS, X-Content-Type-Options, X-Frame-Options) -> hallazgo H-8.
+Total: 6 de 8 conformes. H-7 y H-8 quedan abiertos y documentados.
