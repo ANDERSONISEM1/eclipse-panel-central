@@ -1,7 +1,7 @@
 -- =========================================================
--- ECLIPSE ÔÇö Base de datos eclipse_monitoreo (PostgreSQL 16)
+-- ECLIPSE — Base de datos eclipse_monitoreo (PostgreSQL 16)
 -- Guardado: resumen cada 30 min + registro inmediato al cambiar de estado
--- + estado_vivo: ├║ltima foto de cada equipo (de aqu├¡ sale la tabla de la web)
+-- + estado_vivo: última foto de cada equipo (de aquí sale la tabla de la web)
 -- =========================================================
 
 -- 1) USUARIOS (un solo administrador)
@@ -31,7 +31,7 @@ CREATE TABLE equipos (
 );
 
 -- 3) REGISTROS DE ESTADO (resumen de cada ventana de 30 min)
---    Ô£à CORREGIDO: origen era VARCHAR(12) y 'cambio_estado' mide 13 caracteres.
+--    ✅ CORREGIDO: origen era VARCHAR(12) y 'cambio_estado' mide 13 caracteres.
 CREATE TABLE registros_estado (
     id BIGSERIAL PRIMARY KEY,
     equipo_id INT NOT NULL REFERENCES equipos(id) ON DELETE CASCADE,
@@ -75,7 +75,7 @@ CREATE TABLE sesiones (
 
 CREATE INDEX idx_sesiones_expira ON sesiones(expira_en);
 
--- 6) ESTADO_VIVO (NUEVA): ├║ltima foto de cada equipo + antirruido de cambios de estado
+-- 6) ESTADO_VIVO (NUEVA): última foto de cada equipo + antirruido de cambios de estado
 CREATE TABLE estado_vivo (
     equipo_id INT PRIMARY KEY REFERENCES equipos(id) ON DELETE CASCADE,
     cpu NUMERIC(5,2) NOT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE estado_vivo (
     prog_hab INT NOT NULL DEFAULT 0,
     prog_total INT NOT NULL DEFAULT 0,
     pesados INT NOT NULL DEFAULT 0,
-    procesos JSONB NOT NULL DEFAULT '[]'::jsonb,   -- m├íximo 5: [{nombre,cpu,ramMb}]
+    procesos JSONB NOT NULL DEFAULT '[]'::jsonb,   -- máximo 5: [{nombre,cpu,ramMb}]
     actualizado_en TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
